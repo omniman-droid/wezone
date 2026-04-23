@@ -1,34 +1,61 @@
 const path = require('path');
 const express = require('express');
-const { joinPlayer, updatePlayer, addChat, getState } = require('./world');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
-app.use(express.json({ limit: '50kb' }));
+const server = http.createServer(app);
+const io = new Server(server);
+
+const players = new Map();
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/join', (req, res) => {
-  res.json(joinPlayer(req.body || {}));
-});
+io.on('connection', (socket) => {
+  const spawn = {
+    id: socket.id,
+    x: (Math.random() - 0.5) * 50,
+    y: 0,
+    z: (Math.random() - 0.5) * 50,
+    rotY: 0,
+    color: '#d7dde2',
+    nameTag: `Pilot-${socket.id.slice(0, 4)}`
+  };
 
-app.post('/api/update', (req, res) => {
-  const { id, ...payload } = req.body || {};
-  const player = updatePlayer(id, payload);
-  if (!player) return res.status(404).json({ error: 'unknown player' });
-  res.json({ ok: true, player });
-});
+  players.set(socket.id, spawn);
 
-app.post('/api/chat', (req, res) => {
-  const { id, text } = req.body || {};
-  const chat = addChat(id, text);
-  if (!chat) return res.status(400).json({ error: 'chat rejected' });
-  res.json({ ok: true, chat });
-});
+  socket.emit('bootstrap', {
+    selfId: socket.id,
+    players: Array.from(players.values())
+  });
 
-app.get('/api/state', (_req, res) => {
-  res.json(getState());
+  socket.broadcast.emit('player:join', spawn);
+
+  socket.on('player:update', (payload) => {
+    const existing = players.get(socket.id);
+    if (!existing) return;
+
+    const updated = {
+      ...existing,
+      x: Number.isFinite(payload.x) ? payload.x : existing.x,
+      y: Number.isFinite(payload.y) ? payload.y : existing.y,
+      z: Number.isFinite(payload.z) ? payload.z : existing.z,
+      rotY: Number.isFinite(payload.rotY) ? payload.rotY : existing.rotY,
+      color: typeof payload.color === 'string' ? payload.color.slice(0, 7) : existing.color,
+      nameTag: typeof payload.nameTag === 'string' ? payload.nameTag.slice(0, 20) : existing.nameTag
+    };
+
+    players.set(socket.id, updated);
+    socket.broadcast.emit('player:update', updated);
+  });
+
+  socket.on('disconnect', () => {
+    players.delete(socket.id);
+    io.emit('player:leave', socket.id);
+  });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Wezone running on http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Frutiger Aero MMO running on http://localhost:${PORT}`);
 });

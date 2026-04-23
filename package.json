@@ -1,13 +1,14 @@
 {
-  "name": "wezone",
+  "name": "frutiger-aero-mmo",
   "version": "1.0.0",
-  "description": "Wezone: third-person multiplayer world with glossy metallic characters and playful physics.",
+  "description": "Third-person MMO playground with glossy metallic characters in a Frutiger Aero-inspired style.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check world.js && node --check netlify/functions/api.js && node --check public/game.js"
+    "check": "node --check server.js && node --check public/game.js"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
   }
 }
