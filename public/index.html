@@ -3,111 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wezone</title>
+    <title>Frutiger Aero MMO</title>
     <style>
-      :root { color-scheme: dark; }
-      body { margin: 0; overflow: hidden; font-family: Inter, system-ui, sans-serif; background: #7fc5ee; }
-      canvas { display: block; }
-      .panel {
-        position: fixed; z-index: 20; border-radius: 14px;
-        background: linear-gradient(160deg, rgba(208,239,255,0.25), rgba(18,43,64,0.86));
-        border: 1px solid rgba(210, 243, 255, 0.55);
-        color: #eefbff; box-shadow: 0 8px 32px rgba(0,0,0,.35); backdrop-filter: blur(8px);
+      :root {
+        color-scheme: dark;
       }
-      #hud { top: 12px; left: 12px; padding: 12px; width: 290px; display: none; }
-      #chatRow { display: flex; gap: 8px; margin-top: 8px; }
-      input, button, select {
-        border-radius: 8px; border: 1px solid #7cb0d2; padding: 6px; box-sizing: border-box;
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at 25% 20%, #dff8ff 0%, #75aad5 30%, #234866 100%);
       }
-      input, select { width: 100%; }
-      button {
-        cursor: pointer;
-        background: linear-gradient(180deg, #39b7ff, #0a6ca2);
-        color: white;
-      }
-      #menuScreen {
-        inset: 0; position: fixed; z-index: 40;
-        display: grid; place-items: center;
-        background: radial-gradient(circle at 20% 10%, #ddf6ff 0%, #67a5d9 40%, #1f405e 100%);
-      }
-      #menuCard { width: 380px; padding: 18px; }
-      #playBtn {
-        margin-top: 12px !important;
-        width: 100%;
+
+      #ui {
+        position: fixed;
+        top: 12px;
+        left: 12px;
         padding: 12px;
-        font-size: 18px;
-        font-weight: 700;
-        border: 1px solid rgba(215, 245, 255, 0.85);
-        box-shadow: 0 0 22px rgba(77, 214, 255, 0.5);
+        border-radius: 14px;
+        background: rgba(19, 38, 53, 0.75);
+        border: 1px solid rgba(213, 241, 255, 0.35);
+        backdrop-filter: blur(8px);
+        color: #e9f7ff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        width: 260px;
       }
-      #spawnMenu {
-        right: 12px; top: 12px; padding: 12px; width: 320px; display: none;
-        background: linear-gradient(180deg, rgba(195,239,255,0.42), rgba(11,32,47,0.87));
+
+      #ui h1 {
+        margin: 0 0 8px;
+        font-size: 16px;
       }
-      .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
-      .tab-btn.active { background: #1d8dcb; }
-      .tab { display: none; }
-      .tab.active { display: block; }
-      .row { display: flex; gap: 8px; }
-      #tip { margin-top: 8px; font-size: 12px; color: #b8dff0; }
+
+      #ui label,
+      #ui small {
+        display: block;
+        margin-top: 8px;
+      }
+
+      #ui input {
+        width: 100%;
+        margin-top: 4px;
+        border-radius: 8px;
+        border: 1px solid #84b6d6;
+        padding: 6px;
+        box-sizing: border-box;
+      }
+
+      #legend {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #b6d9ee;
+      }
+
+      canvas {
+        display: block;
+      }
     </style>
   </head>
   <body>
-    <section id="menuScreen">
-      <div id="menuCard" class="panel">
-        <h1>Wezone</h1>
-        <p>Third-person multiplayer sandbox. Build chaos with props.</p>
-        <label>Name</label>
-        <input id="menuName" maxlength="20" value="SkyRider" />
-        <label>Color</label>
-        <input id="menuColor" type="color" value="#d7dde2" />
-        <button id="playBtn">Start Wezone</button>
-      </div>
-    </section>
-
-    <aside id="hud" class="panel">
-      <strong>Wezone</strong>
-      <div style="font-size:12px; margin-top:4px; color:#bce2f4;">WASD move · Space jump · B spawn menu · E select prop · Click shoot</div>
-      <label style="margin-top:8px; display:block;">Player color</label>
+    <aside id="ui">
+      <h1>Frutiger Aero MMO</h1>
+      <small>WASD / Arrow keys to move.</small>
+      <label for="metalColor">Metal Color</label>
       <input id="metalColor" type="color" value="#d7dde2" />
-      <label style="margin-top:8px; display:block;">Name tag</label>
-      <input id="nameTag" maxlength="20" value="SkyRider" />
-      <div id="chatRow">
-        <input id="chatInput" maxlength="80" placeholder="Chat bubble..." />
-        <button id="chatSend">Send</button>
-      </div>
-      <div id="tip">Chat bubbles auto-expire after 10 seconds.</div>
+      <label for="nameTag">Name Tag</label>
+      <input id="nameTag" type="text" maxlength="20" value="SkyRider" />
+      <div id="legend">Third-person multiplayer world with rounded metallic avatars.</div>
     </aside>
 
-    <aside id="spawnMenu" class="panel">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="props">Props</button>
-        <button class="tab-btn" data-tab="tools">Tools</button>
-      </div>
-      <div class="tab active" id="tab-props">
-        <label>Prop type</label>
-        <select id="propType">
-          <option value="crate">Crate</option>
-          <option value="ball">Ball</option>
-          <option value="barrel">Barrel</option>
-          <option value="cone">Cone</option>
-        </select>
-        <label style="margin-top:8px; display:block;">Prop color</label>
-        <input id="propColor" type="color" value="#9dd7ff" />
-        <button id="spawnOne" style="margin-top:8px; width:100%;">Spawn One</button>
-      </div>
-      <div class="tab" id="tab-tools">
-        <label>Mass spawn count</label>
-        <input id="massCount" type="number" min="1" max="40" value="10" />
-        <button id="massSpawn" style="margin-top:8px; width:100%;">Mass Spawn</button>
-        <label style="margin-top:10px; display:block;">Selected resize</label>
-        <div class="row">
-          <input id="resizeValue" type="number" step="0.1" min="0.3" max="6" value="1.3" />
-          <button id="applyResize">Apply</button>
-        </div>
-      </div>
-    </aside>
-
-    <script type="module" src="./game.js?v=20260423c"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="./game.js"></script>
   </body>
 </html>
