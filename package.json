@@ -1,0 +1,14 @@
+{
+  "name": "frutiger-aero-mmo",
+  "version": "1.0.0",
+  "description": "Third-person MMO playground with glossy metallic characters in a Frutiger Aero-inspired style.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/game.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
