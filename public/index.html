@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wezone</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at 25% 20%, #dff8ff 0%, #75aad5 30%, #234866 100%);
+      }
+      #ui {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        padding: 12px;
+        border-radius: 14px;
+        background: rgba(19, 38, 53, 0.75);
+        border: 1px solid rgba(213, 241, 255, 0.35);
+        backdrop-filter: blur(8px);
+        color: #e9f7ff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        width: 280px;
+      }
+      #ui h1 { margin: 0 0 8px; font-size: 16px; }
+      #ui label, #ui small { display: block; margin-top: 8px; }
+      #ui input {
+        width: 100%;
+        margin-top: 4px;
+        border-radius: 8px;
+        border: 1px solid #84b6d6;
+        padding: 6px;
+        box-sizing: border-box;
+      }
+      #chatRow { display: flex; gap: 8px; margin-top: 10px; }
+      #chatInput { flex: 1; }
+      #chatSend {
+        border: 1px solid #84b6d6;
+        border-radius: 8px;
+        background: #0f6ca1;
+        color: white;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      #legend { margin-top: 8px; font-size: 12px; color: #b6d9ee; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <aside id="ui">
+      <h1>Wezone</h1>
+      <small>Move: WASD/Arrows · Jump: Space · Boost pads launch you.</small>
+      <label for="metalColor">Metal Color</label>
+      <input id="metalColor" type="color" value="#d7dde2" />
+      <label for="nameTag">Name Tag</label>
+      <input id="nameTag" type="text" maxlength="20" value="SkyRider" />
+
+      <label for="chatInput">Chat Bubble</label>
+      <div id="chatRow">
+        <input id="chatInput" maxlength="80" placeholder="Say something..." />
+        <button id="chatSend">Send</button>
+      </div>
+
+      <div id="legend">Multiplayer third-person world with rounded metallic avatars and bubble chat.</div>
+    </aside>
+
+    <script type="module" src="./game.js"></script>
+  </body>
+</html>
