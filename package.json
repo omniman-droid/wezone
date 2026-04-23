@@ -1,0 +1,13 @@
+{
+  "name": "wezone",
+  "version": "1.0.0",
+  "description": "Wezone: third-person multiplayer world with glossy metallic characters and playful physics.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check world.js && node --check netlify/functions/api.js && node --check public/game.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
